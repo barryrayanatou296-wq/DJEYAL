@@ -7,8 +7,9 @@
 <meta charset="UTF-8">
 
 <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
 >
 
 <title>DJEYAL — Boutique</title>
@@ -33,7 +34,7 @@
     rel="stylesheet"
     href="style.css"
 >
-    
+
 </head>
 
 <body>
@@ -48,36 +49,38 @@
     DJEYAL
 </div>
 
-
 <div class="menu">
 
-    <a
-        href="index.html"
-        class="active"
-    >
-        Boutique
-    </a>
+```
+<a
+    href="index.html"
+    class="active"
+>
+    Boutique
+</a>
+```
 
 </div>
 
-
 <div class="nav-icons">
 
-    <button
-        id="cartButton"
-        aria-label="Panier"
-        type="button"
-    >
-        🛍 <span id="cartCount">0</span>
-    </button>
+```
+<button
+    id="cartButton"
+    aria-label="Panier"
+    type="button"
+>
+    🛍 <span id="cartCount">0</span>
+</button>
 
 
-    <a
-        href="admin.html"
-        class="admin-link"
-    >
-        Admin
-    </a>
+<a
+    href="admin.html"
+    class="admin-link"
+>
+    Admin
+</a>
+```
 
 </div>
 
@@ -95,12 +98,10 @@
     BIENVENUE CHEZ DJEYAL
 </p>
 
-
 <h1>
     LA BOUTIQUE<br>
     <span>DJEYAL.</span>
 </h1>
-
 
 <p>
     Découvrez nos pièces soigneusement sélectionnées,
@@ -120,98 +121,94 @@
 
 <div class="shop-tools">
 
+```
+<div class="filters">
 
-    <div class="filters">
-
-        <button
-            class="filter active"
-            data-category="all"
-            type="button"
-        >
-            Tout
-        </button>
-
-
-        <button
-            class="filter"
-            data-category="mode"
-            type="button"
-        >
-            Mode
-        </button>
+    <button
+        class="filter active"
+        data-category="all"
+        type="button"
+    >
+        Tout
+    </button>
 
 
-        <button
-            class="filter"
-            data-category="beaute"
-            type="button"
-        >
-            Beauté
-        </button>
+    <button
+        class="filter"
+        data-category="mode"
+        type="button"
+    >
+        Mode
+    </button>
 
 
-        <button
-            class="filter"
-            data-category="accessoires"
-            type="button"
-        >
-            Accessoires
-        </button>
+    <button
+        class="filter"
+        data-category="beaute"
+        type="button"
+    >
+        Beauté
+    </button>
 
 
-        <button
-            class="filter"
-            data-category="chaussures"
-            type="button"
-        >
-            Chaussures
-        </button>
+    <button
+        class="filter"
+        data-category="accessoires"
+        type="button"
+    >
+        Accessoires
+    </button>
 
 
-        <button
-            class="filter"
-            data-category="sac"
-            type="button"
-        >
-            Sacs
-        </button>
+    <button
+        class="filter"
+        data-category="chaussures"
+        type="button"
+    >
+        Chaussures
+    </button>
 
 
-        <button
-            class="filter"
-            data-category="bijoux"
-            type="button"
-        >
-            Bijoux
-        </button>
-
-    </div>
+    <button
+        class="filter"
+        data-category="sac"
+        type="button"
+    >
+        Sacs
+    </button>
 
 
-
-    <div class="search-box">
-
-        🔍
-
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="Rechercher un article..."
-        >
-
-    </div>
+    <button
+        class="filter"
+        data-category="bijoux"
+        type="button"
+    >
+        Bijoux
+    </button>
 
 </div>
 
-<!-- =================================================
-     PRODUITS SUPABASE
-     ================================================= -->
+
+
+<div class="search-box">
+
+    🔍
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Rechercher un article..."
+    >
+
+</div>
+```
+
+</div>
 
 <div
     class="products"
     id="productsContainer"
 >
-
 
 <p
     style="
@@ -247,182 +244,249 @@
     "
 >
 
-    <p class="small-title">
-        UNE ENVIE PARTICULIÈRE ?
-    </p>
+```
+<p class="small-title">
+    UNE ENVIE PARTICULIÈRE ?
+</p>
 
 
-    <h2
+<h2
+    style="
+        font-family:'Playfair Display',serif;
+        font-size:48px;
+        font-weight:500;
+        margin-bottom:18px;
+    "
+>
+    Parlez-nous de vos envies.
+</h2>
+
+
+<p
+    style="
+        color:#aaa3a5;
+        line-height:1.7;
+        margin-bottom:40px;
+    "
+>
+    Vous recherchez une pièce précise,
+    une couleur, un modèle ou un style particulier ?
+    Dites-nous ce que vous aimeriez trouver.
+</p>
+
+
+
+<form
+    id="requestForm"
+    style="
+        display:grid;
+        gap:15px;
+        text-align:left;
+    "
+>
+
+
+    <input
+        id="clientName"
+        type="text"
+        placeholder="Votre prénom"
+        required
         style="
-            font-family:'Playfair Display',serif;
-            font-size:48px;
-            font-weight:500;
-            margin-bottom:18px;
+            width:100%;
+            padding:15px 18px;
+            border:1px solid #302629;
+            border-radius:8px;
+            background:#151314;
+            color:#f5efea;
+            font-family:inherit;
+            outline:none;
         "
     >
-        Parlez-nous de vos envies.
-    </h2>
+
+
+
+    <input
+        id="clientContact"
+        type="text"
+        placeholder="Votre numéro ou moyen de contact"
+        required
+        style="
+            width:100%;
+            padding:15px 18px;
+            border:1px solid #302629;
+            border-radius:8px;
+            background:#151314;
+            color:#f5efea;
+            font-family:inherit;
+            outline:none;
+        "
+    >
+
+
+
+    <select
+        id="requestCategory"
+        style="
+            width:100%;
+            padding:15px 18px;
+            border:1px solid #302629;
+            border-radius:8px;
+            background:#151314;
+            color:#f5efea;
+            font-family:inherit;
+            outline:none;
+        "
+    >
+
+        <option value="">
+            Catégorie souhaitée
+        </option>
+
+        <option value="mode">
+            Mode
+        </option>
+
+        <option value="beaute">
+            Beauté
+        </option>
+
+        <option value="accessoires">
+            Accessoires
+        </option>
+
+        <option value="chaussures">
+            Chaussures
+        </option>
+
+        <option value="sac">
+            Sacs
+        </option>
+
+        <option value="bijoux">
+            Bijoux
+        </option>
+
+        <option value="autre">
+            Autre
+        </option>
+
+    </select>
+
+
+
+    <textarea
+        id="requestMessage"
+        placeholder="Décrivez-nous ce que vous recherchez..."
+        rows="6"
+        required
+        style="
+            width:100%;
+            padding:15px 18px;
+            border:1px solid #302629;
+            border-radius:8px;
+            background:#151314;
+            color:#f5efea;
+            font-family:inherit;
+            outline:none;
+            resize:vertical;
+        "
+    ></textarea>
+
+
+
+    <button
+        type="submit"
+        class="main-button"
+        style="
+            border:none;
+            cursor:pointer;
+            margin-top:5px;
+        "
+    >
+        Envoyer ma demande
+    </button>
 
 
     <p
+        id="requestMessageStatus"
         style="
+            text-align:center;
+            min-height:20px;
+            font-size:13px;
             color:#aaa3a5;
-            line-height:1.7;
-            margin-bottom:40px;
         "
-    >
-        Vous recherchez une pièce précise,
-        une couleur, un modèle ou un style particulier ?
-        Dites-nous ce que vous aimeriez trouver.
+    ></p>
+
+</form>
+```
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     MES COMMANDES
+     ===================================================== -->
+
+<section
+    id="ordersSection"
+    style="
+        padding:90px 7%;
+        background:#151314;
+        border-top:1px solid #302629;
+        border-bottom:1px solid #302629;
+    "
+>
+
+<div
+    style="
+        max-width:900px;
+        margin:auto;
+    "
+>
+
+```
+<p class="small-title">
+    SUIVI DES COMMANDES
+</p>
+
+
+<h2
+    style="
+        font-family:'Playfair Display',serif;
+        font-size:48px;
+        font-weight:500;
+        margin-bottom:18px;
+    "
+>
+    Mes commandes.
+</h2>
+
+
+<p
+    style="
+        color:#aaa3a5;
+        line-height:1.7;
+        margin-bottom:30px;
+    "
+>
+    Retrouve ici les commandes effectuées depuis cet appareil.
+</p>
+
+
+<div id="orderNotifications"></div>
+
+
+<div id="ordersContainer">
+
+    <p style="color:#aaa3a5;">
+        Aucune commande enregistrée sur cet appareil.
     </p>
-
-
-
-    <form
-        id="requestForm"
-        style="
-            display:grid;
-            gap:15px;
-            text-align:left;
-        "
-    >
-
-
-        <input
-            id="clientName"
-            type="text"
-            placeholder="Votre prénom"
-            required
-            style="
-                width:100%;
-                padding:15px 18px;
-                border:1px solid #302629;
-                border-radius:8px;
-                background:#151314;
-                color:#f5efea;
-                font-family:inherit;
-                outline:none;
-            "
-        >
-
-
-
-        <input
-            id="clientContact"
-            type="text"
-            placeholder="Votre numéro ou moyen de contact"
-            required
-            style="
-                width:100%;
-                padding:15px 18px;
-                border:1px solid #302629;
-                border-radius:8px;
-                background:#151314;
-                color:#f5efea;
-                font-family:inherit;
-                outline:none;
-            "
-        >
-
-
-
-        <select
-            id="requestCategory"
-            style="
-                width:100%;
-                padding:15px 18px;
-                border:1px solid #302629;
-                border-radius:8px;
-                background:#151314;
-                color:#f5efea;
-                font-family:inherit;
-                outline:none;
-            "
-        >
-
-            <option value="">
-                Catégorie souhaitée
-            </option>
-
-            <option value="mode">
-                Mode
-            </option>
-
-            <option value="beaute">
-                Beauté
-            </option>
-
-            <option value="accessoires">
-                Accessoires
-            </option>
-
-            <option value="chaussures">
-                Chaussures
-            </option>
-
-            <option value="sac">
-                Sacs
-            </option>
-
-            <option value="bijoux">
-                Bijoux
-            </option>
-
-            <option value="autre">
-                Autre
-            </option>
-
-        </select>
-
-
-
-        <textarea
-            id="requestMessage"
-            placeholder="Décrivez-nous ce que vous recherchez..."
-            rows="6"
-            required
-            style="
-                width:100%;
-                padding:15px 18px;
-                border:1px solid #302629;
-                border-radius:8px;
-                background:#151314;
-                color:#f5efea;
-                font-family:inherit;
-                outline:none;
-                resize:vertical;
-            "
-        ></textarea>
-
-
-
-        <button
-            type="submit"
-            class="main-button"
-            style="
-                border:none;
-                cursor:pointer;
-                margin-top:5px;
-            "
-        >
-            Envoyer ma demande
-        </button>
-
-
-        <p
-            id="requestMessageStatus"
-            style="
-                text-align:center;
-                min-height:20px;
-                font-size:13px;
-                color:#aaa3a5;
-            "
-        ></p>
-
-    </form>
 
 </div>
 ```
+
+</div>
 
 </section>
 
@@ -451,20 +515,24 @@
 >
 
 <button
-    id="closeCart"
-    type="button"
-    style="
-        float:right;
-        border:none;
-        background:none;
-        color:#f5efea;
-        font-size:28px;
-        cursor:pointer;
-    "
->
-    ×
-</button>
+id="closeCart"
+type="button"
+style="
+float:right;
+border:none;
+background:none;
+color:#f5efea;
+font-size:28px;
+cursor:pointer;
+"
 
+>
+
+```
+×
+```
+
+</button>
 
 <h2
     style="
@@ -476,15 +544,15 @@
     Mon panier
 </h2>
 
-
 <div id="cartItems">
 
-    <p style="color:#aaa3a5;">
-        Votre panier est vide.
-    </p>
+```
+<p style="color:#aaa3a5;">
+    Votre panier est vide.
+</p>
+```
 
 </div>
-
 
 <div
     style="
@@ -494,37 +562,39 @@
     "
 >
 
-    <div
-        style="
-            display:flex;
-            justify-content:space-between;
-            color:#f5efea;
-            margin-bottom:20px;
-        "
+```
+<div
+    style="
+        display:flex;
+        justify-content:space-between;
+        color:#f5efea;
+        margin-bottom:20px;
+    "
+>
+
+    <span>
+        Total
+    </span>
+
+
+    <strong
+        id="cartTotal"
+        style="color:#d9476d;"
     >
+        0 FG
+    </strong>
 
-        <span>
-            Total
-        </span>
-
-
-        <strong
-            id="cartTotal"
-            style="color:#d9476d;"
-        >
-            0 FG
-        </strong>
-
-    </div>
+</div>
 
 
-    <button
-        id="checkoutButton"
-        class="add-cart"
-        type="button"
-    >
-        Passer la commande
-    </button>
+<button
+    id="checkoutButton"
+    class="add-cart"
+    type="button"
+>
+    Passer la commande
+</button>
+```
 
 </div>
 
@@ -563,220 +633,222 @@
     "
 >
 
-    <button
-        id="closeCheckout"
-        type="button"
+```
+<button
+    id="closeCheckout"
+    type="button"
+    style="
+        position:absolute;
+        top:15px;
+        right:18px;
+        border:none;
+        background:none;
+        color:#f5efea;
+        font-size:28px;
+        cursor:pointer;
+    "
+>
+    ×
+</button>
+
+
+<p class="small-title">
+    COMMANDE DJEYAL
+</p>
+
+
+<h2
+    style="
+        font-family:'Playfair Display',serif;
+        font-size:35px;
+        font-weight:500;
+        margin-bottom:25px;
+    "
+>
+    Finalisons ta commande ✨
+</h2>
+
+
+<div
+    style="
+        background:#200c12;
+        border:1px solid #63313d;
+        border-radius:10px;
+        padding:18px;
+        margin-bottom:22px;
+    "
+>
+
+    <p
         style="
-            position:absolute;
-            top:15px;
-            right:18px;
-            border:none;
-            background:none;
-            color:#f5efea;
-            font-size:28px;
-            cursor:pointer;
+            color:#aaa3a5;
+            font-size:12px;
+            margin-bottom:7px;
         "
     >
-        ×
-    </button>
-
-
-    <p class="small-title">
-        COMMANDE DJEYAL
+        PAIEMENT ORANGE MONEY
     </p>
 
 
-    <h2
+    <strong
         style="
-            font-family:'Playfair Display',serif;
-            font-size:35px;
-            font-weight:500;
-            margin-bottom:25px;
+            font-size:25px;
+            color:#f5efea;
+            letter-spacing:1px;
         "
     >
-        Finalisons ta commande ✨
-    </h2>
+        622 860 415
+    </strong>
 
 
-    <div
+    <p
         style="
-            background:#200c12;
-            border:1px solid #63313d;
-            border-radius:10px;
-            padding:18px;
-            margin-bottom:22px;
+            color:#aaa3a5;
+            font-size:13px;
+            line-height:1.6;
+            margin-top:10px;
+        "
+    >
+        Fais le dépôt du montant total sur ce numéro,
+        puis confirme ton paiement ci-dessous.
+    </p>
+
+</div>
+
+
+<div
+    style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:15px 0;
+        margin-bottom:18px;
+        border-top:1px solid #302629;
+        border-bottom:1px solid #302629;
+    "
+>
+
+    <span>
+        Total à déposer
+    </span>
+
+
+    <strong
+        id="checkoutTotal"
+        style="
+            color:#d9476d;
+            font-size:20px;
+        "
+    >
+        0 FG
+    </strong>
+
+</div>
+
+
+<form id="checkoutForm">
+
+    <input
+        id="orderName"
+        type="text"
+        placeholder="Votre nom / prénom"
+        required
+        style="
+            width:100%;
+            padding:15px 18px;
+            margin-bottom:12px;
+            border:1px solid #302629;
+            border-radius:8px;
+            background:#101010;
+            color:#f5efea;
+            font-family:inherit;
+            outline:none;
         "
     >
 
-        <p
-            style="
-                color:#aaa3a5;
-                font-size:12px;
-                margin-bottom:7px;
-            "
-        >
-            PAIEMENT ORANGE MONEY
-        </p>
 
-
-        <strong
-            style="
-                font-size:25px;
-                color:#f5efea;
-                letter-spacing:1px;
-            "
-        >
-            622 860 415
-        </strong>
-
-
-        <p
-            style="
-                color:#aaa3a5;
-                font-size:13px;
-                line-height:1.6;
-                margin-top:10px;
-            "
-        >
-            Fais le dépôt du montant total sur ce numéro,
-            puis confirme ton paiement ci-dessous.
-        </p>
-
-    </div>
-
-
-    <div
+    <input
+        id="orderPhone"
+        type="text"
+        placeholder="Votre numéro de téléphone"
+        required
         style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            padding:15px 0;
-            margin-bottom:18px;
-            border-top:1px solid #302629;
-            border-bottom:1px solid #302629;
+            width:100%;
+            padding:15px 18px;
+            margin-bottom:12px;
+            border:1px solid #302629;
+            border-radius:8px;
+            background:#101010;
+            color:#f5efea;
+            font-family:inherit;
+            outline:none;
         "
     >
 
-        <span>
-            Total à déposer
-        </span>
+
+    <input
+        id="orderAddress"
+        type="text"
+        placeholder="Votre adresse de livraison"
+        required
+        style="
+            width:100%;
+            padding:15px 18px;
+            margin-bottom:12px;
+            border:1px solid #302629;
+            border-radius:8px;
+            background:#101010;
+            color:#f5efea;
+            font-family:inherit;
+            outline:none;
+        "
+    >
 
 
-        <strong
-            id="checkoutTotal"
-            style="
-                color:#d9476d;
-                font-size:20px;
-            "
-        >
-            0 FG
-        </strong>
-
-    </div>
-
-
-    <form id="checkoutForm">
-
-        <input
-            id="orderName"
-            type="text"
-            placeholder="Votre nom / prénom"
-            required
-            style="
-                width:100%;
-                padding:15px 18px;
-                margin-bottom:12px;
-                border:1px solid #302629;
-                border-radius:8px;
-                background:#101010;
-                color:#f5efea;
-                font-family:inherit;
-                outline:none;
-            "
-        >
+    <textarea
+        id="orderNote"
+        rows="4"
+        placeholder="Une note pour DJEYAL ? (facultatif)"
+        style="
+            width:100%;
+            padding:15px 18px;
+            margin-bottom:15px;
+            border:1px solid #302629;
+            border-radius:8px;
+            background:#101010;
+            color:#f5efea;
+            font-family:inherit;
+            outline:none;
+            resize:vertical;
+        "
+    ></textarea>
 
 
-        <input
-            id="orderPhone"
-            type="text"
-            placeholder="Votre numéro de téléphone"
-            required
-            style="
-                width:100%;
-                padding:15px 18px;
-                margin-bottom:12px;
-                border:1px solid #302629;
-                border-radius:8px;
-                background:#101010;
-                color:#f5efea;
-                font-family:inherit;
-                outline:none;
-            "
-        >
+    <button
+        id="confirmPaymentButton"
+        type="submit"
+        class="add-cart"
+        style="
+            margin-top:0;
+        "
+    >
+        J’ai effectué mon paiement
+    </button>
 
 
-        <input
-            id="orderAddress"
-            type="text"
-            placeholder="Votre adresse de livraison"
-            required
-            style="
-                width:100%;
-                padding:15px 18px;
-                margin-bottom:12px;
-                border:1px solid #302629;
-                border-radius:8px;
-                background:#101010;
-                color:#f5efea;
-                font-family:inherit;
-                outline:none;
-            "
-        >
+    <p
+        id="checkoutStatus"
+        style="
+            text-align:center;
+            line-height:1.6;
+            font-size:13px;
+            margin-top:15px;
+            min-height:20px;
+        "
+    ></p>
 
-
-        <textarea
-            id="orderNote"
-            rows="4"
-            placeholder="Une note pour DJEYAL ? (facultatif)"
-            style="
-                width:100%;
-                padding:15px 18px;
-                margin-bottom:15px;
-                border:1px solid #302629;
-                border-radius:8px;
-                background:#101010;
-                color:#f5efea;
-                font-family:inherit;
-                outline:none;
-                resize:vertical;
-            "
-        ></textarea>
-
-
-        <button
-            id="confirmPaymentButton"
-            type="submit"
-            class="add-cart"
-            style="
-                margin-top:0;
-            "
-        >
-            J’ai effectué mon paiement
-        </button>
-
-
-        <p
-            id="checkoutStatus"
-            style="
-                text-align:center;
-                line-height:1.6;
-                font-size:13px;
-                margin-top:15px;
-                min-height:20px;
-            "
-        ></p>
-
-    </form>
+</form>
+```
 
 </div>
 
@@ -821,6 +893,10 @@ const CART_STORAGE_KEY =
 
 const WISHLIST_STORAGE_KEY =
     "djeyal_wishlist_v1";
+
+
+const ORDERS_STORAGE_KEY =
+    "djeyal_order_ids_v1";
 
 
 function loadLocalData() {
@@ -868,6 +944,44 @@ function loadLocalData() {
 }
 
 
+function loadCustomerOrders() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                ORDERS_STORAGE_KEY
+            );
+
+
+        customerOrderIds =
+            saved
+            ? JSON.parse(saved)
+            : [];
+
+
+        if (!Array.isArray(customerOrderIds)) {
+
+            customerOrderIds = [];
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Erreur commandes locales :",
+            error
+        );
+
+        customerOrderIds = [];
+
+    }
+
+}
+
+
 
 /* =====================================================
    VARIABLES
@@ -878,6 +992,8 @@ let products = [];
 let cart = [];
 
 let wishlist = [];
+
+let customerOrderIds = [];
 
 let selectedCategory = "all";
 
@@ -912,6 +1028,48 @@ function saveWishlist() {
         WISHLIST_STORAGE_KEY,
         JSON.stringify(wishlist)
     );
+
+}
+
+
+
+/* =====================================================
+   SAUVEGARDER LES COMMANDES
+   ===================================================== */
+
+function saveCustomerOrders() {
+
+    localStorage.setItem(
+        ORDERS_STORAGE_KEY,
+        JSON.stringify(customerOrderIds)
+    );
+
+}
+
+
+function addCustomerOrder(orderId) {
+
+    if (!orderId)
+        return;
+
+
+    const alreadyExists =
+        customerOrderIds.some(
+            id =>
+                String(id) ===
+                String(orderId)
+        );
+
+
+    if (!alreadyExists) {
+
+        customerOrderIds.push(
+            orderId
+        );
+
+        saveCustomerOrders();
+
+    }
 
 }
 
@@ -959,11 +1117,6 @@ async function loadProducts() {
 
     products = data || [];
 
-
-    /*
-       On remet à jour les données produits
-       déjà présentes dans le panier.
-    */
 
     cart = cart
         .map(cartItem => {
@@ -1923,6 +2076,7 @@ document
 
 
             const {
+                data: createdOrder,
                 error
             } = await supabaseClient
                 .from("orders")
@@ -1952,7 +2106,9 @@ document
                     payment_status:
                         "En attente de vérification"
 
-                });
+                })
+                .select("id")
+                .single();
 
 
             if (error) {
@@ -1985,6 +2141,19 @@ document
                 return;
 
             }
+
+
+            /*
+               On mémorise l'ID de cette commande
+               sur le téléphone du client.
+            */
+
+            addCustomerOrder(
+                createdOrder.id
+            );
+
+
+            await loadMyOrders();
 
 
             status.style.color =
@@ -2021,6 +2190,393 @@ document
 
         }
     );
+
+
+
+/* =====================================================
+   MES COMMANDES
+   ===================================================== */
+
+async function loadMyOrders() {
+
+    const container =
+        document.getElementById(
+            "ordersContainer"
+        );
+
+
+    const notifications =
+        document.getElementById(
+            "orderNotifications"
+        );
+
+
+    if (!container)
+        return;
+
+
+    notifications.innerHTML = "";
+
+
+    if (!customerOrderIds.length) {
+
+        container.innerHTML = `
+            <p style="color:#aaa3a5;">
+                Aucune commande enregistrée sur cet appareil.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("orders")
+        .select("*")
+        .in(
+            "id",
+            customerOrderIds
+        )
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Erreur Mes commandes :",
+            error
+        );
+
+
+        container.innerHTML = `
+            <p style="
+                color:#d9476d;
+                line-height:1.6;
+            ">
+                Impossible de charger tes commandes pour le moment.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    const orders =
+        data || [];
+
+
+    /*
+       Si une commande est refusée,
+       on affiche le message d'annulation.
+    */
+
+    const rejectedOrders =
+        orders.filter(
+            order =>
+                order.payment_status ===
+                "Paiement refusé"
+        );
+
+
+    if (rejectedOrders.length) {
+
+        notifications.innerHTML =
+            rejectedOrders
+                .map(
+                    () => `
+                        <div
+                            style="
+                                background:#200c12;
+                                border:1px solid #63313d;
+                                border-radius:10px;
+                                padding:18px;
+                                margin-bottom:15px;
+                                color:#f5efea;
+                            "
+                        >
+
+                            <strong
+                                style="
+                                    color:#e96a88;
+                                "
+                            >
+                                Commande annulée
+                            </strong>
+
+
+                            <p
+                                style="
+                                    color:#aaa3a5;
+                                    line-height:1.6;
+                                    margin-top:8px;
+                                "
+                            >
+                                Votre commande a été annulée
+                                car le dépôt n’a pas été constaté.
+                            </p>
+
+                        </div>
+                    `
+                )
+                .join("");
+
+
+        /*
+           La commande refusée ne reste plus
+           dans "Mes commandes".
+        */
+
+        customerOrderIds =
+            customerOrderIds.filter(
+                id =>
+                    !rejectedOrders.some(
+                        order =>
+                            String(order.id) ===
+                            String(id)
+                    )
+            );
+
+
+        saveCustomerOrders();
+
+    }
+
+
+    const activeOrders =
+        orders.filter(
+            order =>
+                order.payment_status !==
+                "Paiement refusé"
+        );
+
+
+    if (!activeOrders.length) {
+
+        container.innerHTML = `
+            <p style="
+                color:#aaa3a5;
+                line-height:1.6;
+            ">
+                Aucune commande en cours.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        activeOrders
+            .map(order => {
+
+                let items = [];
+
+
+                try {
+
+                    items =
+                        typeof order.items ===
+                        "string"
+                        ? JSON.parse(order.items)
+                        : (
+                            Array.isArray(order.items)
+                            ? order.items
+                            : []
+                        );
+
+                }
+
+                catch(error) {
+
+                    console.error(
+                        "Erreur lecture articles commande :",
+                        error
+                    );
+
+                    items = [];
+
+                }
+
+
+                const status =
+                    order.payment_status ||
+                    "En attente de vérification";
+
+
+                const statusColor =
+                    status === "Payé"
+                    ? "#75c987"
+                    : "#e96a88";
+
+
+                const itemsHTML =
+                    items
+                        .map(item => `
+
+                            <div
+                                style="
+                                    display:flex;
+                                    justify-content:space-between;
+                                    gap:15px;
+                                    padding:8px 0;
+                                    color:#aaa3a5;
+                                    font-size:13px;
+                                "
+                            >
+
+                                <span>
+                                    ${escapeHTML(
+                                        item.name ||
+                                        "Article"
+                                    )}
+                                    × ${Number(
+                                        item.quantity || 0
+                                    )}
+                                </span>
+
+
+                                <span>
+                                    ${formatPrice(
+                                        Number(item.price || 0) *
+                                        Number(item.quantity || 0)
+                                    )}
+                                </span>
+
+                            </div>
+
+                        `)
+                        .join("");
+
+
+                return `
+
+                    <article
+                        style="
+                            border:1px solid #302629;
+                            border-radius:12px;
+                            padding:20px;
+                            margin-bottom:15px;
+                            background:#101010;
+                        "
+                    >
+
+                        <div
+                            style="
+                                display:flex;
+                                justify-content:space-between;
+                                align-items:center;
+                                gap:15px;
+                                flex-wrap:wrap;
+                                margin-bottom:15px;
+                            "
+                        >
+
+                            <strong>
+                                Commande #${escapeHTML(
+                                    String(order.id)
+                                        .slice(0,8)
+                                )}
+                            </strong>
+
+
+                            <span
+                                style="
+                                    color:${statusColor};
+                                    font-size:13px;
+                                "
+                            >
+                                ${escapeHTML(status)}
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            style="
+                                border-top:1px solid #302629;
+                                border-bottom:1px solid #302629;
+                                padding:12px 0;
+                                margin-bottom:15px;
+                            "
+                        >
+
+                            ${itemsHTML}
+
+                        </div>
+
+
+                        <div
+                            style="
+                                display:flex;
+                                justify-content:space-between;
+                                align-items:center;
+                            "
+                        >
+
+                            <span
+                                style="
+                                    color:#aaa3a5;
+                                    font-size:13px;
+                                "
+                            >
+                                Total
+                            </span>
+
+
+                            <strong
+                                style="
+                                    color:#d9476d;
+                                    font-size:18px;
+                                "
+                            >
+                                ${formatPrice(
+                                    order.total
+                                )}
+                            </strong>
+
+                        </div>
+
+                    </article>
+
+                `;
+
+            })
+            .join("");
+
+}
+
+
+
+/* =====================================================
+   VÉRIFICATION AUTOMATIQUE
+   ===================================================== */
+
+async function checkMyOrders() {
+
+    if (!customerOrderIds.length)
+        return;
+
+
+    await loadMyOrders();
+
+}
+
+
+setInterval(
+    checkMyOrders,
+    15000
+);
 
 
 
@@ -2264,9 +2820,13 @@ function escapeHTML(value) {
 
 loadLocalData();
 
+loadCustomerOrders();
+
 updateCart();
 
 loadProducts();
+
+loadMyOrders();
 
 </script>
 
