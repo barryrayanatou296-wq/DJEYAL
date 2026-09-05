@@ -1,8 +1,11 @@
+javascript
 // ==========================================
 // DJEYAL — ADMIN DASHBOARD
 // Connexion + gestion des produits
 // + images Supabase
+// + stock
 // + commandes
+// + paiement Orange Money
 // + statistiques
 // ==========================================
 
@@ -604,7 +607,10 @@ async function loadProducts() {
         const result =
             await supabaseClient
                 .from("products")
-                .select("*");
+                .select("*")
+                .order("id", {
+                    ascending: false
+                });
 
         const data =
             result.data;
@@ -742,7 +748,51 @@ function renderProducts(products) {
             formatPrice(product.price);
 
         const stock =
-            product.stock ?? 0;
+            Number(product.stock ?? 0);
+
+        let stockHTML = "";
+
+        if (stock <= 0) {
+
+            stockHTML = `
+                <span style="
+                    color:#b00020;
+                    font-weight:600;
+                ">
+                    💕 Rupture de stock
+                </span>
+            `;
+
+        } else if (stock === 1) {
+
+            stockHTML = `
+                <span style="
+                    color:#7a0019;
+                    font-weight:600;
+                ">
+                    ✨ Plus qu’un seul !
+                </span>
+            `;
+
+        } else if (stock <= 5) {
+
+            stockHTML = `
+                <span style="
+                    color:#7a0019;
+                    font-weight:600;
+                ">
+                    ⚠️ ${stock} disponibles
+                </span>
+            `;
+
+        } else {
+
+            stockHTML = `
+                <span>
+                    📦 ${stock} disponibles
+                </span>
+            `;
+        }
 
         card.innerHTML =
             imageHTML +
@@ -772,10 +822,7 @@ function renderProducts(products) {
                             ${price} GNF
                         </strong>
 
-                        <span>
-                            📦 Stock :
-                            ${stock}
-                        </span>
+                        ${stockHTML}
 
                     </div>
 
@@ -815,6 +862,9 @@ function renderProducts(products) {
 
             actions.style.marginTop =
                 "20px";
+
+            actions.style.flexWrap =
+                "wrap";
         }
 
         const editButton =
@@ -1089,6 +1139,18 @@ if (productForm) {
 
                     showAdminMessage(
                         "❌ Entre un prix d'achat valide."
+                    );
+
+                    return;
+                }
+
+                if (
+                    Number.isNaN(product.stock) ||
+                    product.stock < 0
+                ) {
+
+                    showAdminMessage(
+                        "❌ Le stock doit être égal ou supérieur à 0."
                     );
 
                     return;
@@ -1407,6 +1469,138 @@ function escapeHTML(value) {
 
 
 // ==========================================
+// STATUT PAIEMENT
+// ==========================================
+
+function getPaymentStatusClass(status) {
+
+    const value =
+        String(
+            status ||
+            "En attente de vérification"
+        ).toLowerCase();
+
+    if (
+        value.includes("payé") ||
+        value.includes("paye") ||
+        value.includes("valid")
+    ) {
+
+        return "paid";
+    }
+
+    if (
+        value.includes("refus") ||
+        value.includes("annul")
+    ) {
+
+        return "rejected";
+    }
+
+    return "pending";
+}
+
+
+// ==========================================
+// CHANGER LE STATUT DU PAIEMENT
+// ==========================================
+
+async function updatePaymentStatus(
+    orderId,
+    newStatus,
+    button
+) {
+
+    if (!orderId) {
+        return;
+    }
+
+    const sessionResult =
+        await supabaseClient.auth.getSession();
+
+    const sessionData =
+        sessionResult.data;
+
+    if (
+        !sessionData ||
+        !sessionData.session
+    ) {
+
+        showLogin();
+
+        return;
+    }
+
+    const oldText =
+        button
+            ? button.textContent
+            : "";
+
+    if (button) {
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "⏳ Enregistrement...";
+    }
+
+    try {
+
+        const result =
+            await supabaseClient
+                .from("orders")
+                .update({
+                    payment_status:
+                        newStatus
+                })
+                .eq(
+                    "id",
+                    orderId
+                );
+
+        if (result.error) {
+            throw result.error;
+        }
+
+        showAdminMessage(
+            "✅ Statut du paiement mis à jour.",
+            true
+        );
+
+        await loadOrders();
+        await loadStatistics();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Erreur statut paiement :",
+            error
+        );
+
+        showAdminMessage(
+            "❌ Impossible de modifier le statut : " +
+            (
+                error.message ||
+                "Erreur inconnue."
+            )
+        );
+
+        if (button) {
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                oldText;
+        }
+    }
+}
+
+
+// ==========================================
 // COMMANDES REÇUES
 // ==========================================
 
@@ -1544,6 +1738,21 @@ async function loadOrders() {
                     )
                     : "Date inconnue";
 
+
+            // ==================================
+            // STATUT PAIEMENT
+            // ==================================
+
+            const paymentStatus =
+                order.payment_status ||
+                "En attente de vérification";
+
+            const paymentClass =
+                getPaymentStatusClass(
+                    paymentStatus
+                );
+
+
             ordersList.innerHTML += `
 
                 <div class="order-card">
@@ -1557,6 +1766,91 @@ async function loadOrders() {
                         <div class="order-date">
                             ${date}
                         </div>
+
+                    </div>
+
+
+                    <div style="
+                        margin:15px 0;
+                        padding:14px;
+                        border-radius:10px;
+                        background:#faf7f8;
+                        border:1px solid #eadfe2;
+                    ">
+
+                        <div style="
+                            font-size:11px;
+                            letter-spacing:1px;
+                            font-weight:600;
+                            margin-bottom:7px;
+                        ">
+                            💳 PAIEMENT ORANGE MONEY
+                        </div>
+
+                        <div style="
+                            font-size:15px;
+                            font-weight:600;
+                            margin-bottom:12px;
+                        ">
+                            ${escapeHTML(
+                                paymentStatus
+                            )}
+                        </div>
+
+                        <select
+                            class="payment-status-select"
+                            data-order-id="${escapeHTML(
+                                order.id
+                            )}"
+                            style="
+                                width:100%;
+                                max-width:350px;
+                                padding:11px;
+                                border:1px solid #ddd;
+                                border-radius:8px;
+                                background:#fff;
+                                font-size:14px;
+                                cursor:pointer;
+                            "
+                        >
+
+                            <option
+                                value="En attente de vérification"
+                                ${
+                                    paymentStatus ===
+                                    "En attente de vérification"
+                                        ? "selected"
+                                        : ""
+                                }
+                            >
+                                ⏳ En attente de vérification
+                            </option>
+
+                            <option
+                                value="Payé"
+                                ${
+                                    paymentStatus ===
+                                    "Payé"
+                                        ? "selected"
+                                        : ""
+                                }
+                            >
+                                ✅ Payé
+                            </option>
+
+                            <option
+                                value="Paiement refusé"
+                                ${
+                                    paymentStatus ===
+                                    "Paiement refusé"
+                                        ? "selected"
+                                        : ""
+                                }
+                            >
+                                ❌ Paiement refusé
+                            </option>
+
+                        </select>
 
                     </div>
 
@@ -1659,6 +1953,39 @@ async function loadOrders() {
             `;
         }
     );
+
+
+    // ==========================================
+    // EVENEMENTS DES STATUTS
+    // ==========================================
+
+    const statusSelects =
+        ordersList.querySelectorAll(
+            ".payment-status-select"
+        );
+
+    statusSelects.forEach(
+        function(select) {
+
+            select.addEventListener(
+                "change",
+                function() {
+
+                    const orderId =
+                        this.dataset.orderId;
+
+                    const newStatus =
+                        this.value;
+
+                    updatePaymentStatus(
+                        orderId,
+                        newStatus,
+                        this
+                    );
+                }
+            );
+        }
+    );
 }
 
 
@@ -1677,7 +2004,9 @@ async function loadStatistics() {
         error: ordersError
     } = await supabaseClient
         .from("orders")
-        .select("items, total");
+        .select(
+            "items, total, payment_status"
+        );
 
     if (ordersError) {
 
@@ -1833,6 +2162,109 @@ async function loadStatistics() {
 
 
     // ------------------------------------------
+    // STOCK FAIBLE
+    // ------------------------------------------
+
+    const {
+        data: stockProducts,
+        error: stockError
+    } = await supabaseClient
+        .from("products")
+        .select("stock");
+
+    let lowStockCount = 0;
+
+    if (!stockError && stockProducts) {
+
+        lowStockCount =
+            stockProducts.filter(
+                product =>
+                    Number(product.stock ?? 0) <= 5
+            ).length;
+    }
+
+
+    // ------------------------------------------
+    // MEILLEUR PRODUIT
+    // ------------------------------------------
+
+    const productSales = {};
+
+    orders.forEach(order => {
+
+        let items = [];
+
+        try {
+
+            items =
+                Array.isArray(order.items)
+                    ? order.items
+                    : JSON.parse(
+                        order.items || "[]"
+                    );
+
+        }
+
+        catch (error) {
+
+            items = [];
+        }
+
+        items.forEach(item => {
+
+            const id =
+                String(
+                    item.id ||
+                    item.name ||
+                    "unknown"
+                );
+
+            const quantity =
+                Number(
+                    item.quantity || 0
+                );
+
+            if (!productSales[id]) {
+
+                productSales[id] = {
+                    name:
+                        item.name ||
+                        "Produit",
+                    quantity: 0
+                };
+            }
+
+            productSales[id].quantity +=
+                quantity;
+        });
+    });
+
+
+    let bestProduct =
+        "—";
+
+    let bestQuantity =
+        0;
+
+    Object.values(
+        productSales
+    ).forEach(product => {
+
+        if (
+            product.quantity >
+            bestQuantity
+        ) {
+
+            bestQuantity =
+                product.quantity;
+
+            bestProduct =
+                product.name;
+        }
+    });
+
+
+    // ------------------------------------------
     // ELEMENTS STATISTIQUES
     // ------------------------------------------
 
@@ -1854,6 +2286,16 @@ async function loadStatistics() {
     const profitElement =
         document.getElementById(
             "stat-profit"
+        );
+
+    const lowStockElement =
+        document.getElementById(
+            "stat-low-stock"
+        );
+
+    const bestProductElement =
+        document.getElementById(
+            "stat-best-product"
         );
 
 
@@ -1912,6 +2354,29 @@ async function loadStatistics() {
             " GNF";
     }
 
+
+    // ------------------------------------------
+    // AFFICHER STOCK FAIBLE
+    // ------------------------------------------
+
+    if (lowStockElement) {
+
+        lowStockElement.textContent =
+            lowStockCount.toLocaleString(
+                "fr-FR"
+            );
+    }
+
+
+    // ------------------------------------------
+    // AFFICHER MEILLEUR PRODUIT
+    // ------------------------------------------
+
+    if (bestProductElement) {
+
+        bestProductElement.textContent =
+            bestProduct;
+    }
 }
 
 
