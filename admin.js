@@ -1,4 +1,3 @@
-javascript
 // ==========================================
 // DJEYAL — ADMIN DASHBOARD
 // Connexion + produits + stock
