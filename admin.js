@@ -463,7 +463,7 @@ async function uploadProductImage(file) {
     if (!allowedTypes.includes(file.type)) {
 
         throw new Error(
-            "Format d'image non autorisé."
+            "Format d'image non autorisé. Utilise JPG, PNG, WEBP ou GIF."
         );
     }
 
@@ -479,21 +479,52 @@ async function uploadProductImage(file) {
     }
 
 
+    // Nom compatible ordinateur + téléphone
     const extension =
-        file.name
-            .split(".")
-            .pop()
-            .toLowerCase();
+        (
+            file.name &&
+            file.name.includes(".")
+        )
+            ? file.name
+                .split(".")
+                .pop()
+                .toLowerCase()
+            : (
+                file.type === "image/png"
+                    ? "png"
+                    : file.type === "image/webp"
+                        ? "webp"
+                        : file.type === "image/gif"
+                            ? "gif"
+                            : "jpg"
+            );
+
+
+    const randomPart =
+        Math.random()
+            .toString(36)
+            .substring(2, 12);
+
+
+    const timePart =
+        Date.now()
+            .toString(36);
 
 
     const fileName =
-        crypto.randomUUID() +
+        "product_" +
+        timePart +
+        "_" +
+        randomPart +
         "." +
         extension;
 
 
+    // IMPORTANT :
+    // on garde le fichier directement dans le bucket
+    // pour éviter certains problèmes d'upload mobile.
+
     const filePath =
-        "products/" +
         fileName;
 
 
@@ -508,7 +539,8 @@ async function uploadProductImage(file) {
                 file,
                 {
                     cacheControl: "3600",
-                    upsert: false
+                    upsert: false,
+                    contentType: file.type
                 }
             );
 
@@ -520,7 +552,13 @@ async function uploadProductImage(file) {
             error
         );
 
-        throw error;
+        throw new Error(
+            "Impossible d'envoyer l'image : " +
+            (
+                error.message ||
+                "erreur Supabase."
+            )
+        );
     }
 
 
@@ -533,6 +571,17 @@ async function uploadProductImage(file) {
             .getPublicUrl(
                 filePath
             );
+
+
+    if (
+        !data ||
+        !data.publicUrl
+    ) {
+
+        throw new Error(
+            "L'image a été envoyée mais son adresse n'a pas pu être récupérée."
+        );
+    }
 
 
     return data.publicUrl;
@@ -1178,7 +1227,9 @@ if (productForm) {
                 }
 
 
+                // ==================================
                 // MODIFICATION
+                // ==================================
 
                 if (editingProductId) {
 
@@ -1263,7 +1314,9 @@ if (productForm) {
                 }
 
 
+                // ==================================
                 // AJOUT
+                // ==================================
 
                 if (!file) {
 
@@ -1479,6 +1532,185 @@ function getPaymentStatusClass(status) {
 
 
 // ==========================================
+// RECUPERER LES PRODUITS D'UNE COMMANDE
+// ==========================================
+
+function parseOrderItems(order) {
+
+    if (!order) {
+        return [];
+    }
+
+
+    try {
+
+        if (Array.isArray(order.items)) {
+            return order.items;
+        }
+
+
+        if (typeof order.items === "string") {
+
+            const parsed =
+                JSON.parse(
+                    order.items
+                );
+
+            return Array.isArray(parsed)
+                ? parsed
+                : [];
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "ORDER ITEMS PARSE ERROR:",
+            error
+        );
+    }
+
+
+    return [];
+}
+
+
+// ==========================================
+// RESTAURER LE STOCK
+// ==========================================
+
+async function restoreOrderStock(order) {
+
+    const items =
+        parseOrderItems(order);
+
+
+    if (!items.length) {
+
+        console.warn(
+            "Aucun produit trouvé dans la commande à restaurer.",
+            order
+        );
+
+        return;
+    }
+
+
+    for (
+        const item
+        of items
+    ) {
+
+        const productId =
+            item.id;
+
+
+        const quantity =
+            Number(
+                item.quantity || 0
+            );
+
+
+        if (
+            !productId ||
+            !Number.isInteger(quantity) ||
+            quantity <= 0
+        ) {
+
+            continue;
+        }
+
+
+        // On récupère le stock actuel
+        const {
+            data: product,
+            error: productError
+        } =
+            await supabaseClient
+                .from("products")
+                .select(
+                    "id, stock"
+                )
+                .eq(
+                    "id",
+                    productId
+                )
+                .maybeSingle();
+
+
+        if (productError) {
+
+            console.error(
+                "STOCK PRODUCT ERROR:",
+                productError
+            );
+
+            throw productError;
+        }
+
+
+        if (!product) {
+
+            console.warn(
+                "Produit introuvable pour restauration du stock :",
+                productId
+            );
+
+            continue;
+        }
+
+
+        const currentStock =
+            Number(
+                product.stock || 0
+            );
+
+
+        const newStock =
+            currentStock +
+            quantity;
+
+
+        const {
+            error: updateError
+        } =
+            await supabaseClient
+                .from("products")
+                .update({
+                    stock:
+                        newStock
+                })
+                .eq(
+                    "id",
+                    productId
+                );
+
+
+        if (updateError) {
+
+            console.error(
+                "RESTORE STOCK ERROR:",
+                updateError
+            );
+
+            throw updateError;
+        }
+
+
+        console.log(
+            "STOCK RESTAURE :",
+            productId,
+            "+",
+            quantity,
+            "=>",
+            newStock
+        );
+    }
+}
+
+
+// ==========================================
 // MODIFIER STATUT PAIEMENT
 // ==========================================
 
@@ -1497,6 +1729,70 @@ async function updatePaymentStatus(
 
         selectElement.disabled = true;
 
+
+        // --------------------------------------
+        // On récupère d'abord la commande
+        // --------------------------------------
+
+        const {
+            data: currentOrder,
+            error: currentOrderError
+        } =
+            await supabaseClient
+                .from("orders")
+                .select(
+                    "id, items, payment_status"
+                )
+                .eq(
+                    "id",
+                    orderId
+                )
+                .maybeSingle();
+
+
+        if (currentOrderError) {
+
+            throw currentOrderError;
+        }
+
+
+        if (!currentOrder) {
+
+            throw new Error(
+                "Commande introuvable."
+            );
+        }
+
+
+        const oldStatus =
+            currentOrder.payment_status ||
+            PAYMENT_PENDING;
+
+
+        // --------------------------------------
+        // SI REFUS :
+        // restaurer le stock UNE SEULE FOIS
+        // --------------------------------------
+
+        if (
+            newStatus === PAYMENT_REJECTED &&
+            oldStatus !== PAYMENT_REJECTED
+        ) {
+
+            showAdminMessage(
+                "⏳ Annulation de la commande et restauration du stock..."
+            );
+
+
+            await restoreOrderStock(
+                currentOrder
+            );
+        }
+
+
+        // --------------------------------------
+        // Mise à jour du statut
+        // --------------------------------------
 
         const {
             error
@@ -1519,16 +1815,39 @@ async function updatePaymentStatus(
         }
 
 
-        showAdminMessage(
-            "✅ Statut du paiement mis à jour.",
-            true
-        );
+        if (
+            newStatus === PAYMENT_REJECTED
+        ) {
+
+            showAdminMessage(
+                "❌ Commande annulée : paiement refusé et stock restauré.",
+                true
+            );
+
+        } else if (
+            newStatus === PAYMENT_PAID
+        ) {
+
+            showAdminMessage(
+                "✅ Paiement confirmé !",
+                true
+            );
+
+        } else {
+
+            showAdminMessage(
+                "⏳ Paiement remis en attente.",
+                true
+            );
+        }
 
 
         selectElement.disabled = false;
 
 
         await loadOrders();
+
+        await loadProducts();
 
         await loadStatistics();
 
@@ -1641,24 +1960,10 @@ async function loadOrders() {
         orders.forEach(
             function(order, index) {
 
-                let items = [];
-
-
-                try {
-
-                    items =
-                        Array.isArray(order.items)
-                            ? order.items
-                            : JSON.parse(
-                                order.items || "[]"
-                            );
-
-                }
-
-                catch (error) {
-
-                    items = [];
-                }
+                const items =
+                    parseOrderItems(
+                        order
+                    );
 
 
                 let productsHTML = "";
@@ -2128,24 +2433,10 @@ async function loadStatistics() {
                 }
 
 
-                let items = [];
-
-
-                try {
-
-                    items =
-                        Array.isArray(order.items)
-                            ? order.items
-                            : JSON.parse(
-                                order.items || "[]"
-                            );
-
-                }
-
-                catch (error) {
-
-                    items = [];
-                }
+                const items =
+                    parseOrderItems(
+                        order
+                    );
 
 
                 items.forEach(
@@ -2246,24 +2537,10 @@ async function loadStatistics() {
                 }
 
 
-                let items = [];
-
-
-                try {
-
-                    items =
-                        Array.isArray(order.items)
-                            ? order.items
-                            : JSON.parse(
-                                order.items || "[]"
-                            );
-
-                }
-
-                catch (error) {
-
-                    items = [];
-                }
+                const items =
+                    parseOrderItems(
+                        order
+                    );
 
 
                 items.forEach(
