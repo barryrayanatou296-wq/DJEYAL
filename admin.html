@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>DJEYAL — Administration</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        /* ==========================================
+           DJEYAL — ADMIN
+        ========================================== */
+
+        :root {
+            --admin-black: #080808;
+            --admin-black-soft: #101010;
+            --admin-card: #151314;
+            --admin-pink: #d9476d;
+            --admin-pink-light: #e96a88;
+            --admin-wine: #641321;
+            --admin-wine-dark: #300a12;
+            --admin-red: #a71932;
+            --admin-cream: #f5efea;
+            --admin-gold: #b9925c;
+            --admin-grey: #aaa3a5;
+            --admin-border: #302629;
+        }
+
+
+        /* ==========================================
+           PAGE
+        ========================================== */
+
+        body {
+            margin: 0;
+            background: var(--admin-cream);
+            color: var(--admin-black);
+        }
+
+
+        /* ==========================================
+           CONNEXION
+        ========================================== */
+
+        #login-section {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 30px;
+
+            box-sizing: border-box;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(100, 19, 33, 0.12),
+                    transparent 35%
+                ),
+                var(--admin-cream);
+        }
+
+
+        .login-box {
+
+            width: 100%;
+
+            max-width: 430px;
+
+            background: var(--admin-black-soft);
+
+            padding: 45px;
+
+            border: 1px solid var(--admin-gold);
+
+            box-shadow:
+                12px 12px 0 var(--admin-wine);
+
+            box-sizing: border-box;
+        }
+
+
+        .login-logo {
+
+            font-size: 42px;
+
+            font-weight: 900;
+
+            letter-spacing: 4px;
+
+            color: var(--admin-pink);
+
+            margin-bottom: 5px;
+        }
+
+
+        .login-subtitle {
+
+            margin-bottom: 35px;
+
+            color: var(--admin-grey);
+        }
+
+
+        .admin-field {
+
+            margin-bottom: 20px;
+        }
+
+
+        .admin-field label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-weight: 700;
+
+            color: var(--admin-cream);
+        }
+
+
+        .admin-field input,
+        .admin-field select,
+        .admin-field textarea {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 14px;
+
+            border: 1px solid var(--admin-border);
+
+            background: #211d1e;
+
+            color: var(--admin-cream);
+
+            font-family: inherit;
+
+            font-size: 15px;
+
+            outline: none;
+        }
+
+
+        .admin-field input:focus,
+        .admin-field select:focus,
+        .admin-field textarea:focus {
+
+            border-color: var(--admin-pink);
+
+            box-shadow:
+                0 0 0 2px rgba(217, 71, 109, 0.12);
+        }
+
+
+        .admin-field textarea {
+
+            min-height: 110px;
+
+            resize: vertical;
+        }
+
+
+        .admin-field input::placeholder {
+
+            color: #777;
+        }
+
+
+        .admin-field select option {
+
+            background: var(--admin-black-soft);
+
+            color: var(--admin-cream);
+        }
+
+
+        /* ==========================================
+           BOUTON ADMIN
+        ========================================== */
+
+        .admin-button {
+
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+
+            background: var(--admin-wine);
+
+            color: white;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            transition: 0.25s ease;
+        }
+
+
+        .admin-button:hover {
+
+            background: var(--admin-pink);
+
+            transform: translateY(-1px);
+        }
+
+
+        .admin-message {
+
+            display: none;
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border: 1px solid var(--admin-border);
+
+            background: #211d1e;
+
+            color: var(--admin-cream);
+        }
+
+
+        .admin-message.show {
+
+            display: block;
+        }
+
+
+        /* ==========================================
+           DASHBOARD
+        ========================================== */
+
+        #dashboard-section {
+
+            display: none;
+
+            min-height: 100vh;
+
+            background: var(--admin-cream);
+        }
+
+
+        /* ==========================================
+           HEADER
+        ========================================== */
+
+        .admin-header {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--admin-black),
+                    var(--admin-wine-dark)
+                );
+
+            color: white;
+
+            padding: 20px 5%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            border-bottom: 1px solid var(--admin-gold);
+        }
+
+
+        .admin-brand {
+
+            font-size: 28px;
+
+            font-weight: 900;
+
+            letter-spacing: 3px;
+
+            color: var(--admin-pink);
+        }
+
+
+        .logout-button {
+
+            border: 1px solid var(--admin-gold);
+
+            background: transparent;
+
+            color: white;
+
+            padding: 10px 18px;
+
+            cursor: pointer;
+
+            font-weight: 700;
+
+            transition: 0.25s ease;
+        }
+
+
+        .logout-button:hover {
+
+            background: var(--admin-pink);
+
+            border-color: var(--admin-pink);
+
+            color: white;
+        }
+
+
+        /* ==========================================
+           CONTENU
+        ========================================== */
+
+        .dashboard-content {
+
+            width: 90%;
+
+            max-width: 1300px;
+
+            margin: 40px auto;
+        }
+
+
+        .dashboard-title {
+
+            font-size: 38px;
+
+            margin-bottom: 10px;
+
+            color: var(--admin-black);
+        }
+
+
+        .dashboard-intro {
+
+            color: #6d6668;
+
+            margin-bottom: 35px;
+        }
+
+
+        /* ==========================================
+           STATISTIQUES
+        ========================================== */
+
+        .stats-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 40px;
+        }
+
+
+        .stat-card {
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #fffaf6,
+                    #f5ebe5
+                );
+
+            border: 1px solid var(--admin-border);
+
+            padding: 25px;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+
+        .stat-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            width: 5px;
+
+            height: 100%;
+
+            background: var(--admin-wine);
+        }
+
+
+        .stat-label {
+
+            font-size: 13px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            color: #6d6668;
+        }
+
+
+        .stat-value {
+
+            font-size: 30px;
+
+            font-weight: 900;
+
+            margin-top: 10px;
+
+            color: var(--admin-wine);
+
+            word-break: break-word;
+        }
+
+
+        /* ==========================================
+           BLOCS
+        ========================================== */
+
+        .admin-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 25px;
+        }
+
+
+        .admin-card {
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #fffaf6,
+                    #f8efea
+                );
+
+            border: 1px solid var(--admin-border);
+
+            padding: 30px;
+
+            box-shadow:
+                5px 5px 0 rgba(100, 19, 33, 0.08);
+        }
+
+
+        .admin-card h2 {
+
+            margin-top: 0;
+
+            margin-bottom: 25px;
+
+            color: var(--admin-black);
+        }
+
+
+        /* ==========================================
+           PRODUITS
+        ========================================== */
+
+        .admin-product-card {
+
+            background: #fffaf6;
+
+            border: 1px solid var(--admin-border);
+
+            padding: 20px;
+
+            margin-bottom: 18px;
+
+            transition: 0.2s ease;
+        }
+
+
+        .admin-product-card:hover {
+
+            border-color: var(--admin-wine);
+
+            box-shadow:
+                4px 4px 0 rgba(100, 19, 33, 0.10);
+        }
+
+
+        .admin-product-info h3 {
+
+            color: var(--admin-wine);
+
+            margin-top: 0;
+        }
+
+
+        .admin-product-info p {
+
+            color: #5f595b;
+        }
+
+
+        .admin-product-details {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-top: 15px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .admin-product-details strong {
+
+            color: var(--admin-wine);
+
+            font-size: 18px;
+        }
+
+
+        .featured-badge {
+
+            display: inline-block;
+
+            background: var(--admin-pink);
+
+            color: white;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+        }
+
+
+        /* ==========================================
+           ACTIONS PRODUITS
+        ========================================== */
+
+        .admin-product-actions {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 20px;
+        }
+
+
+        .edit-product-button,
+        .delete-product-button {
+
+            transition: 0.2s ease;
+        }
+
+
+        .edit-product-button:hover {
+
+            background: var(--admin-wine) !important;
+        }
+
+
+        .delete-product-button:hover {
+
+            background: var(--admin-red) !important;
+        }
+
+
+        /* ==========================================
+           CHAMP IMAGE
+        ========================================== */
+
+        .admin-field input[type="file"] {
+
+            padding: 10px;
+
+            cursor: pointer;
+        }
+
+
+        .admin-field input[type="file"]::file-selector-button {
+
+            background: var(--admin-wine);
+
+            color: white;
+
+            border: none;
+
+            padding: 8px 12px;
+
+            margin-right: 10px;
+
+            cursor: pointer;
+        }
+
+
+        /* ==========================================
+           CHECKBOX
+        ========================================== */
+
+        .checkbox-line {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .checkbox-line label {
+
+            color: var(--admin-black);
+
+            margin: 0;
+        }
+
+
+        .checkbox-line input {
+
+            accent-color: var(--admin-wine);
+
+            width: 18px;
+
+            height: 18px;
+
+            cursor: pointer;
+        }
+
+
+        /* ==========================================
+           GRAPHIQUE
+        ========================================== */
+
+        #sales-chart {
+
+            min-height: 300px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border: 1px dashed var(--admin-gold) !important;
+
+            background:
+                rgba(100, 19, 33, 0.03);
+
+            color: var(--admin-wine);
+        }
+
+
+        /* ==========================================
+           COMMANDES
+        ========================================== */
+
+        .orders-section {
+
+            margin-top: 25px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .orders-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 18px;
+        }
+
+
+        .order-card {
+
+            background: #fffaf6;
+
+            border: 1px solid var(--admin-border);
+
+            padding: 22px;
+
+            transition: 0.2s ease;
+        }
+
+
+        .order-card:hover {
+
+            border-color: var(--admin-wine);
+
+            box-shadow:
+                4px 4px 0 rgba(100, 19, 33, 0.10);
+        }
+
+
+        .order-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            gap: 20px;
+
+            flex-wrap: wrap;
+
+            padding-bottom: 15px;
+
+            margin-bottom: 15px;
+
+            border-bottom: 1px solid var(--admin-border);
+        }
+
+
+        .order-number {
+
+            font-weight: 900;
+
+            color: var(--admin-wine);
+
+            font-size: 18px;
+        }
+
+
+        .order-date {
+
+            color: #6d6668;
+
+            font-size: 13px;
+        }
+
+
+        .order-customer {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .order-info-box {
+
+            background: #f8efea;
+
+            border: 1px solid var(--admin-border);
+
+            padding: 13px;
+        }
+
+
+        .order-info-label {
+
+            display: block;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.7px;
+
+            color: #6d6668;
+
+            margin-bottom: 5px;
+        }
+
+
+        .order-info-value {
+
+            color: var(--admin-black);
+
+            font-weight: 700;
+
+            word-break: break-word;
+        }
+
+
+        .order-products {
+
+            margin-top: 15px;
+        }
+
+
+        .order-products-title {
+
+            font-weight: 800;
+
+            color: var(--admin-black);
+
+            margin-bottom: 10px;
+        }
+
+
+        .order-product-line {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            padding: 10px 0;
+
+            border-bottom: 1px solid #e5dcd8;
+        }
+
+
+        .order-product-name {
+
+            color: #5f595b;
+        }
+
+
+        .order-product-quantity {
+
+            color: var(--admin-wine);
+
+            font-weight: 800;
+
+            white-space: nowrap;
+        }
+
+
+        .order-total {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-top: 18px;
+
+            padding-top: 15px;
+
+            border-top: 2px solid var(--admin-wine);
+        }
+
+
+        .order-total-label {
+
+            font-weight: 900;
+
+            color: var(--admin-black);
+
+        }
+
+
+        .order-total-value {
+
+            font-size: 21px;
+
+            font-weight: 900;
+
+            color: var(--admin-wine);
+        }
+
+
+        .order-note {
+
+            margin-top: 15px;
+
+            padding: 13px;
+
+            background: rgba(217, 71, 109, 0.07);
+
+            border-left: 4px solid var(--admin-pink);
+
+            color: #5f595b;
+
+        }
+
+
+        .orders-empty {
+
+            padding: 30px;
+
+            text-align: center;
+
+            color: #6d6668;
+
+            border: 1px dashed var(--admin-gold);
+
+            background: rgba(100, 19, 33, 0.03);
+        }
+
+
+        /* ==========================================
+           RESPONSIVE
+        ========================================== */
+
+
+/* ==========================================
+   RESPONSIVE — TABLETTE
+========================================== */
+
+@media (max-width: 850px) {
+
+    .dashboard-content {
+        width: 92%;
+        margin: 30px auto;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-card {
+        padding: 22px;
+    }
+
+    .order-customer {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stat-card {
+        padding: 20px;
+    }
+
+    .stat-value {
+        font-size: 25px;
+    }
+}
+
+
+/* ==========================================
+   RESPONSIVE — TÉLÉPHONE
+========================================== */
+
+@media (max-width: 550px) {
+
+    #login-section {
+        padding: 18px;
+    }
+
+    .login-box {
+        padding: 28px 22px;
+        box-shadow: 7px 7px 0 var(--admin-wine);
+    }
+
+    .login-logo {
+        font-size: 34px;
+        letter-spacing: 3px;
+    }
+
+    .login-subtitle {
+        margin-bottom: 28px;
+    }
+
+
+    /* HEADER */
+
+    .admin-header {
+        padding: 17px 5%;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .admin-brand {
+        font-size: 23px;
+        letter-spacing: 2px;
+    }
+
+    .logout-button {
+        padding: 9px 12px;
+        font-size: 11px;
+    }
+
+
+    /* CONTENU */
+
+    .dashboard-content {
+        width: 92%;
+        margin: 25px auto;
+    }
+
+    .dashboard-title {
+        font-size: 28px;
+        line-height: 1.15;
+    }
+
+    .dashboard-intro {
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 25px;
+    }
+
+
+    /* STATISTIQUES */
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+
+    .stat-card {
+        padding: 17px 14px;
+    }
+
+    .stat-card::before {
+        width: 4px;
+    }
+
+    .stat-label {
+        font-size: 10px;
+        letter-spacing: 0.6px;
+        line-height: 1.3;
+    }
+
+    .stat-value {
+        font-size: 20px;
+        margin-top: 8px;
+    }
+
+
+    /* CARTES */
+
+    .admin-card {
+        padding: 20px 16px;
+        margin-bottom: 18px;
+    }
+
+    .admin-card h2 {
+        font-size: 21px;
+        line-height: 1.3;
+        margin-bottom: 20px;
+    }
+
+
+    /* PRODUITS */
+
+    .admin-product-card {
+        padding: 16px;
+    }
+
+    .admin-product-details {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .admin-product-actions {
+        flex-direction: column;
+    }
+
+    .admin-product-actions button {
+        width: 100%;
+    }
+
+
+    /* FORMULAIRE */
+
+    .admin-field {
+        margin-bottom: 17px;
+    }
+
+    .admin-field input,
+    .admin-field select,
+    .admin-field textarea {
+        font-size: 16px;
+        padding: 13px;
+    }
+
+    .admin-field textarea {
+        min-height: 100px;
+    }
+
+    .checkbox-line {
+        align-items: flex-start;
+    }
+
+
+    /* COMMANDES */
+
+    .orders-section {
+        margin-top: 18px;
+        margin-bottom: 18px;
+    }
+
+    .order-card {
+        padding: 17px;
+    }
+
+    .order-header {
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .order-number {
+        font-size: 16px;
+    }
+
+    .order-customer {
+        grid-template-columns: 1fr;
+        gap: 9px;
+    }
+
+    .order-info-box {
+        padding: 11px;
+    }
+
+    .order-product-line {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .order-total {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .order-total-value {
+        font-size: 19px;
+    }
+
+
+    /* GRAPHIQUE */
+
+    #sales-chart {
+        min-height: 220px;
+        text-align: center;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+}
+
+
+/* ==========================================
+   TRÈS PETITS ÉCRANS
+========================================== */
+
+@media (max-width: 380px) {
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-header {
+        padding-left: 4%;
+        padding-right: 4%;
+    }
+
+    .admin-brand {
+        font-size: 21px;
+    }
+
+    .logout-button {
+        font-size: 10px;
+        padding: 8px 10px;
+    }
+
+    .dashboard-content {
+        width: 94%;
+    }
+}
+
+
+
+            .login-box {
+
+                padding: 30px;
+            }
+
+
+            .admin-header {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+
+            .dashboard-title {
+
+                font-size: 30px;
+            }
+
+
+            .dashboard-content {
+
+                width: 92%;
+            }
+
+
+            .order-customer {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .order-product-line {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 5px;
+            }
+
+        
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         CONNEXION
+    ========================================== -->
+
+    <section id="login-section">
+
+        <div class="login-box">
+
+            <div class="login-logo">
+                DJEYAL
+            </div>
+
+            <p class="login-subtitle">
+                Espace administration
+            </p>
+
+
+            <form id="login-form">
+
+                <div class="admin-field">
+
+                    <label for="login-email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="login-email"
+                        placeholder="Ton adresse email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="admin-field">
+
+                    <label for="login-password">
+                        Mot de passe
+                    </label>
+
+                    <input
+                        type="password"
+                        id="login-password"
+                        placeholder="Ton mot de passe"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="admin-button"
+                >
+                    SE CONNECTER
+                </button>
+
+            </form>
+
+
+            <div
+                id="login-message"
+                class="admin-message"
+            ></div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         DASHBOARD
+    ========================================== -->
+
+    <section id="dashboard-section">
+
+
+        <header class="admin-header">
+
+            <div class="admin-brand">
+                DJEYAL
+            </div>
+
+            <button
+                id="logout-button"
+                class="logout-button"
+            >
+                DÉCONNEXION
+            </button>
+
+        </header>
+
+
+
+        <main class="dashboard-content">
+
+
+            <h1 class="dashboard-title">
+                Tableau de bord
+            </h1>
+
+
+            <p class="dashboard-intro">
+                Bienvenue dans ton espace de gestion DJEYAL.
+            </p>
+
+
+
+            <!-- ==========================================
+                 STATISTIQUES
+            ========================================== -->
+
+            <div class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Chiffre d'affaires
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="stat-revenue"
+                    >
+                        0 GNF
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Bénéfice
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="stat-profit"
+                    >
+                        0 GNF
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Ventes
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="stat-sales"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Produits
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="stat-products"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <!-- NOUVELLE STATISTIQUE -->
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Stock faible
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="stat-low-stock"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <!-- NOUVELLE STATISTIQUE -->
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Meilleur produit
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="stat-best-product"
+                    >
+                        Aucun
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ==========================================
+                 LISTE DES PRODUITS
+            ========================================== -->
+
+            <div
+                class="admin-card"
+                style="margin-top:25px;"
+            >
+
+                <h2>
+                    📦 Mes produits
+                </h2>
+
+                <div id="products-list">
+
+                    <p>
+                        Chargement des produits...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ==========================================
+                 COMMANDES
+            ========================================== -->
+
+            <div
+                class="admin-card orders-section"
+            >
+
+                <h2>
+                    🛍️ Commandes reçues
+                </h2>
+
+                <p
+                    style="
+                        color:#6d6668;
+                        margin-top:-10px;
+                        margin-bottom:25px;
+                    "
+                >
+                    Voici les commandes passées depuis la boutique DJEYAL.
+                </p>
+
+                <div
+                    id="orders-list"
+                    class="orders-list"
+                >
+
+                    <div class="orders-empty">
+                        Chargement des commandes...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ==========================================
+                 GESTION
+            ========================================== -->
+
+            <div class="admin-grid">
+
+
+                <!-- AJOUT PRODUIT -->
+
+                <div class="admin-card">
+
+                    <h2>
+                        Ajouter un produit
+                    </h2>
+
+
+                    <form id="product-form">
+
+
+                        <div class="admin-field">
+
+                            <label for="product-name">
+                                Nom du produit
+                            </label>
+
+                            <input
+                                type="text"
+                                id="product-name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="admin-field">
+
+                            <label for="product-price">
+                                Prix de vente (GNF)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="product-price"
+                                min="0"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="admin-field">
+
+                            <label for="product-purchase-price">
+                                Prix d'achat (GNF)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="product-purchase-price"
+                                min="0"
+                                value="0"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="admin-field">
+
+                            <label for="product-category">
+                                Catégorie
+                            </label>
+
+                            <select
+                                id="product-category"
+                                required
+                            >
+
+                                <option value="">
+                                    Choisir une catégorie
+                                </option>
+
+                                <option value="mode">
+                                    Mode
+                                </option>
+
+                                <option value="beaute">
+                                    Beauté
+                                </option>
+
+                                <option value="accessoires">
+                                    Accessoires
+                                </option>
+
+                                <option value="chaussures">
+                                    Chaussures
+                                </option>
+
+                                <option value="sacs">
+                                    Sacs
+                                </option>
+
+                                <option value="bijoux">
+                                    Bijoux
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="admin-field">
+
+                            <label for="product-description">
+                                Description
+                            </label>
+
+                            <textarea
+                                id="product-description"
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="admin-field">
+
+                            <label for="product-image">
+                                Image du produit
+                            </label>
+
+                            <input
+                                type="file"
+                                id="product-image"
+                                accept="image/jpeg,image/png,image/webp,image/gif"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="admin-field">
+
+                            <label for="product-stock">
+                                Stock
+                            </label>
+
+                            <input
+                                type="number"
+                                id="product-stock"
+                                min="0"
+                                value="1"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="checkbox-line">
+
+                            <input
+                                type="checkbox"
+                                id="product-featured"
+                            >
+
+                            <label for="product-featured">
+                                Produit mis en avant
+                            </label>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="admin-button"
+                        >
+                            AJOUTER LE PRODUIT
+                        </button>
+
+
+                    </form>
+
+
+                    <div
+                        id="admin-message"
+                        class="admin-message"
+                    ></div>
+
+                </div>
+
+
+
+                <!-- ANALYTIQUE -->
+
+                <div class="admin-card">
+
+                    <h2>
+                        📊 Analyse des ventes
+                    </h2>
+
+                    <p>
+                        Ton graphique de ventes apparaîtra ici.
+                    </p>
+
+                    <div id="sales-chart">
+
+                        Graphique DJEYAL
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </main>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         SUPABASE
+    ========================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="admin.js"></script>
+
+
+</body>
+
+</html>
