@@ -1710,164 +1710,287 @@ for (
 // ==========================================
 
 async function updatePaymentStatus(
-orderId,
-newStatus,
-selectElement
+    orderId,
+    newStatus,
+    selectElement
 ) {
 
-if (!orderId) {
-    return;
-}
-
-
-try {
-
-    selectElement.disabled = true;
-
-
-    // --------------------------------------
-    // On récupère d'abord la commande
-    // --------------------------------------
-
-    const {
-        data: currentOrder,
-        error: currentOrderError
-    } =
-        await supabaseClient
-            .from("orders")
-            .select(
-                "id, items, payment_status"
-            )
-            .eq(
-                "id",
-                orderId
-            )
-            .maybeSingle();
-
-
-    if (currentOrderError) {
-
-        throw currentOrderError;
+    if (!orderId) {
+        console.error("ID commande manquant.");
+        return;
     }
 
-
-    if (!currentOrder) {
-
-        throw new Error(
-            "Commande introuvable."
-        );
+    if (!selectElement) {
+        console.error("Select paiement introuvable.");
+        return;
     }
 
+    const previousValue = selectElement.value;
 
-    const oldStatus =
-        currentOrder.payment_status ||
-        PAYMENT_PENDING;
+    try {
 
-
-    // --------------------------------------
-    // SI REFUS :
-    // restaurer le stock UNE SEULE FOIS
-    // --------------------------------------
-
-    if (
-        newStatus === PAYMENT_REJECTED &&
-        oldStatus !== PAYMENT_REJECTED
-    ) {
+        selectElement.disabled = true;
 
         showAdminMessage(
-            "⏳ Annulation de la commande et restauration du stock..."
+            "⏳ Modification du paiement..."
         );
 
+        // ======================================
+        // 1. RECUPERER LA COMMANDE ACTUELLE
+        // ======================================
 
-        await restoreOrderStock(
-            currentOrder
-        );
-    }
+        const {
+            data: currentOrder,
+            error: currentOrderError
+        } =
+            await supabaseClient
+                .from("orders")
+                .select("id, items, payment_status")
+                .eq("id", orderId)
+                .maybeSingle();
 
+        if (currentOrderError) {
 
-    // --------------------------------------
-    // Mise à jour du statut
-    // --------------------------------------
-
-    const {
-        error
-    } =
-        await supabaseClient
-            .from("orders")
-            .update({
-                payment_status:
-                    newStatus
-            })
-            .eq(
-                "id",
-                orderId
+            console.error(
+                "RECUPERATION COMMANDE ERROR:",
+                currentOrderError
             );
 
+            throw currentOrderError;
+        }
 
-    if (error) {
+        if (!currentOrder) {
 
-        throw error;
+            throw new Error(
+                "Commande introuvable ou inaccessible. Vérifie les politiques RLS de la table orders."
+            );
+        }
+
+        const oldStatus =
+            currentOrder.payment_status ||
+            PAYMENT_PENDING;
+
+
+        // ======================================
+        // 2. SI AUCUN CHANGEMENT
+        // ======================================
+
+        if (oldStatus === newStatus) {
+
+            selectElement.disabled = false;
+
+            return;
+        }
+
+
+        // ======================================
+        // 3. MODIFIER LE STATUT
+        // ======================================
+
+        const {
+            data: updatedOrder,
+            error: updateError
+        } =
+            await supabaseClient
+                .from("orders")
+                .update({
+                    payment_status: newStatus
+                })
+                .eq("id", orderId)
+                .select("id, payment_status")
+                .maybeSingle();
+
+
+        if (updateError) {
+
+            console.error(
+                "UPDATE PAYMENT ERROR:",
+                updateError
+            );
+
+            throw updateError;
+        }
+
+
+        // ======================================
+        // 4. VERIFICATION IMPORTANTE
+        // ======================================
+
+        if (!updatedOrder) {
+
+            throw new Error(
+                "Supabase n'a modifié aucune commande. Vérifie la politique UPDATE de la table orders dans Supabase."
+            );
+        }
+
+
+        if (
+            updatedOrder.payment_status !==
+            newStatus
+        ) {
+
+            throw new Error(
+                "Le statut du paiement n'a pas été enregistré correctement."
+            );
+        }
+
+
+        // ======================================
+        // 5. PAIEMENT REFUSÉ
+        // ======================================
+        // On restaure le stock seulement lors
+        // du premier passage vers "Paiement refusé".
+
+        if (
+            newStatus === PAYMENT_REJECTED &&
+            oldStatus !== PAYMENT_REJECTED
+        ) {
+
+            showAdminMessage(
+                "⏳ Paiement refusé. Restauration du stock..."
+            );
+
+            try {
+
+                await restoreOrderStock(
+                    currentOrder
+                );
+
+            }
+
+            catch (stockError) {
+
+                console.error(
+                    "STOCK RESTORATION ERROR:",
+                    stockError
+                );
+
+
+                // On signale clairement que le statut
+                // est enregistré mais que le stock
+                // n'a pas pu être restauré.
+
+                showAdminMessage(
+                    "⚠️ Commande annulée, mais le stock n'a pas pu être restauré automatiquement : " +
+                    (
+                        stockError.message ||
+                        "erreur inconnue."
+                    )
+                );
+
+                selectElement.disabled = false;
+
+                await loadOrders();
+                await loadProducts();
+                await loadStatistics();
+
+                return;
+            }
+
+
+            showAdminMessage(
+                "❌ Commande annulée : paiement refusé et stock restauré.",
+                true
+            );
+        }
+
+
+        // ======================================
+        // 6. PAIEMENT VALIDÉ
+        // ======================================
+
+        else if (
+            newStatus === PAYMENT_PAID
+        ) {
+
+            showAdminMessage(
+                "✅ Paiement confirmé !",
+                true
+            );
+        }
+
+
+        // ======================================
+        // 7. RETOUR EN ATTENTE
+        // ======================================
+
+        else if (
+            newStatus === PAYMENT_PENDING
+        ) {
+
+            showAdminMessage(
+                "⏳ Paiement remis en attente.",
+                true
+            );
+        }
+
+
+        // ======================================
+        // 8. RAFRAICHIR LE DASHBOARD
+        // ======================================
+
+        await loadOrders();
+
+        await loadProducts();
+
+        await loadStatistics();
+
     }
 
+    catch (error) {
 
-    if (
-        newStatus === PAYMENT_REJECTED
-    ) {
-
-        showAdminMessage(
-            "❌ Commande annulée : paiement refusé et stock restauré.",
-            true
+        console.error(
+            "PAYMENT STATUS ERROR:",
+            error
         );
 
-    } else if (
-        newStatus === PAYMENT_PAID
-    ) {
 
-        showAdminMessage(
-            "✅ Paiement confirmé !",
-            true
-        );
+        // Remettre visuellement l'ancien statut
+        // si la modification a échoué.
 
-    } else {
+        if (
+            selectElement &&
+            previousValue
+        ) {
 
-        showAdminMessage(
-            "⏳ Paiement remis en attente.",
-            true
-        );
-    }
+            selectElement.value =
+                previousValue;
+        }
 
 
-    selectElement.disabled = false;
-
-
-    await loadOrders();
-
-    await loadProducts();
-
-    await loadStatistics();
-
-}
-
-catch (error) {
-
-    console.error(
-        "PAYMENT STATUS ERROR:",
-        error
-    );
-
-
-    showAdminMessage(
-        "❌ Impossible de modifier le statut : " +
-        (
+        let message =
             error.message ||
-            "Erreur inconnue."
-        )
-    );
+            "Erreur inconnue.";
 
 
-    selectElement.disabled = false;
-}
+        // Message plus clair pour les problèmes RLS
 
+        if (
+            message.toLowerCase().includes("row-level") ||
+            message.toLowerCase().includes("rls") ||
+            message.toLowerCase().includes("permission") ||
+            message.toLowerCase().includes("policy")
+        ) {
+
+            message =
+                "Supabase bloque la modification de la commande. Vérifie la politique UPDATE de la table orders.";
+        }
+
+
+        showAdminMessage(
+            "❌ Impossible de modifier le statut : " +
+            message
+        );
+
+    }
+
+    finally {
+
+        if (selectElement) {
+
+            selectElement.disabled = false;
+        }
+    }
 }
 
 // ==========================================
